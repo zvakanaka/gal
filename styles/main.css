@@ -1,0 +1,278 @@
+nav, footer {
+  width: 100%;
+  height: 25px;
+}
+
+nav {
+  padding-top: 10px;
+  background-color: #eee;
+  margin-bottom: 20px;
+  box-shadow: 0px 1px 1px rgba(0,0,0,0.5);
+}
+
+.nav-a, .logo {
+  display: inline;
+  color: #000;
+  padding-top: 10px;
+  padding-right: 16px;
+  padding-bottom: 7px;
+  padding-left: 15px;
+  text-decoration: none;
+}
+
+nav a.on, nav a:hover {
+  background-color: #000;
+  color: #eee;
+  border-radius: 0px;
+}
+
+h1, h2, h3, h4, h5, h6, pre {
+}
+
+form, article {
+  padding: 20px 20px;
+  box-shadow: 1px 3px 8px rgba(0,0,0,0.5);
+}
+
+table form {
+  padding: 0px;
+}
+
+td {
+  padding: 3px 4px;
+}
+
+pre {
+	border-radius: 5px;
+	padding: 5px;
+	white-space: pre-wrap;
+	white-space: -moz-pre-wrap;
+	white-space: -o-pre-wrap;
+	word-wrap: break-word;
+}
+
+main, .singularity {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+input {
+  margin-bottom: 15px;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  line-height: 1.5em;
+  color: lightgray;
+}
+
+.singularity {
+  padding-left: 10px;
+  margin-top: 10px;
+  color: floralwhite;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table, td, th {
+  border: 1px solid #008a7d;
+  background-color: #000;
+  color: floralwhite;
+}
+
+a:link:not(.nav-a) {
+  color: #222;
+}
+a:visited:not(.nav-a) {
+  color: #222;
+}
+a:hover:not(.nav-a) {
+}
+a:active:not(.nav-a) {
+}
+
+footer a {
+  padding-left: 20px;
+}
+
+img.thumb {
+  box-shadow: 1px 3px 8px rgba(0,0,0,0.5);
+}
+
+div.album-thumb {
+  color: #222;
+}
+
+div.album-thumb, img.thumb {
+  border: 1px solid #000;
+}
+div.album-thumb:hover, img.thumb:hover {
+  border: 1px solid #ccc;
+}
+
+.album-img {
+  width: 100%;
+  height: auto;
+}
+
+div.album-desc {
+  padding: 6px;
+  text-align: center;
+}
+
+.thumb-link {
+  text-decoration: none;
+}
+
+.error, .message {
+  padding: 10px;
+  background-color: black;
+}
+
+.error {
+  color: red;
+}
+
+.message {
+  color: lime;
+}
+
+.hidden {
+  display: none;
+}
+
+main {
+ padding-bottom: 35px;
+}
+
+/* GOOD STUFF */
+@import url('https://fonts.googleapis.com/css?family=Space+Mono');
+
+body {
+  font-family: "Space Mono", "Courier New";
+  color: #222;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  min-height: 100vh;
+}
+
+.spacer {
+  height: 2em;
+}
+.spacer-big {
+  height: 4em;
+}
+.center, h2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+input {
+  background: 0;
+  border: 0;
+  border-bottom: 3px solid #222;
+  color: #222;
+  font-weight: 500;
+  font-family: "Space Mono", "Courier New";
+  outline: 0;
+  text-align: center;
+  font-size: 120%;
+  line-height: 120%;
+  width: 13em;
+  margin: 0 1.5em 1em 0;
+}
+button, input[type="submit"] {
+  background-color: #222;
+  border-radius: 4px;
+  border: 1px solid #444;
+  display: inline-block;
+  cursor: pointer;
+  color: #eee;
+  font-family: "Space Mono", "Courier New";
+  font-size: 20px;
+  padding: 17px 32px;
+  text-decoration: none;
+  text-shadow: #444 -1px 1px 1px;
+  margin: 0 0 .5em 1em;
+}
+button:hover, input[type="submit"]:hover {
+  text-shadow: #888 -1px 1px 1px;
+}
+select {
+  background: 0;
+  border: 0;
+  border-bottom: 3px solid #eee;
+  color: #222;
+  background-color: #eee;
+  font-weight: 500;
+  outline: 0;
+  text-align: center;
+  font-size: 120%;
+  line-height: 120%;
+  width: 13em;
+  font-family: "Space Mono", "Courier New";
+  margin-bottom: .5em;
+}
+.constrictor {
+  max-width: 750px;
+}
+div.progress-bar {
+  width: 20%;
+  border: 1px solid #4f5;
+}
+
+div.progress-bar-progress {
+  font-family: "Space Mono", "Courier New";
+  width: 10%;
+  height: 30px;
+  background-color: #4d5;
+  text-align: center;
+  line-height: 30px;
+  color: black;
+}
+.hidden {
+  display: none;
+}
+/* input validation */
+.input-error-message {
+  color: #f46;
+}
+
+div#upload-to-server input {
+  text-align: left;
+}
+input#port-number {
+  width: 3em;
+}
+div.wrap {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+}
+h2 {
+  margin-top: 3em;
+}
+
+/* gallery */
+/* THANKS Christopher Scmeider!: http://codepen.io/ckschmieder/pen/RWLqRB */
+.gal {
+  flex-flow: row wrap;
+  display: flex;
+}
+.gal div {
+  flex: auto;
+  width: 200px;
+  margin: 0.5vw;
+}
+.gal div img {
+  width: 100%;
+  height: auto;
+}
+/* END GOOD STUFF */

@@ -1,0 +1,15 @@
+img[data-fullsize] {
+  filter: blur(2px);
+}
+
+img.loaded[data-fullsize] {
+  animation: blur 0.25s linear forwards;
+}
+
+@keyframes blur {
+  to {
+    -webkit-filter: blur(0px);
+    -moz-filter: blur(0px);
+    filter: blur(0px);
+  }
+}
