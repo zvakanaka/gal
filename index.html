@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style media="screen">
+      html { background-color: #000; }
+    </style>
+    <title>Home</title>
+    <meta name="description" content="Photo Gallery">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="/manifest_json/default.json">
+    <link rel="import" href="components/light-box.html">
+  </head>
+  <body>
+  <nav>
+    <a class="nav-link nav-a on" href="javascript:void(0);" id="home-tab">Albums</a>
+  </nav>
+<main>
+<h1 id="page-title"></h1>
+<div class="gal"></div>
+<light-box></light-box>
+<script>
+const SERVER_NAME = 'http://localhost:8888'
+const BASE_URL = `${SERVER_NAME}`;
+const PHOTO_DIR = `/photo`;
+const PHOTO_URL = `${SERVER_NAME}${PHOTO_DIR}`
+const IMAGE_FORMAT = supportsWebP() ? 'webp' : 'jpg';
+// const PATHS = {
+//   albumList: '?action=album_names',
+//   photoList: '?action=pictures_in_album&album='
+// };
+const PATHS = {
+  albumList: '/directories',
+  photoList: '/images/'
+};
+/* get album names */
+function getAlbums() {
+  console.log(`getting albums via ${PATHS.albumList}`);
+  return fetch(`${BASE_URL}${PATHS.albumList}`, { mode: 'cors' })
+    .then(res => {
+      if (typeof res === 'string') return false;
+      return res.json();
+    });
+}
+/* clean lists */
+function removeChildren(parent) {
+  if (!parent || parent.children.length === 0) return false;
+  let previousAlbums = Array.from(parent.children);
+  previousAlbums.forEach(child => {
+    parent.removeChild(child);
+  });
+}
+/* do it all again */
+function refreshAlbums(albumNames) {
+  let albumList = document.querySelector('.gal');
+  removeChildren(albumList);
+  document.querySelector('#page-title').textContent = 'Albums';
+  albumNames.forEach(album => {
+    let a = document.createElement('a');
+    // a.setAttribute('href', `${BASE_URL}?action=album&album=${album}`);
+    a.setAttribute('href', `javascript:void(0);`);
+    a.setAttribute('id', `a-${album}`);
+    a.setAttribute('data-album', `${album}`);
+    a.addEventListener('click', e => {
+      getImages(`${album}`).then((data) => refreshImages(data, album));
+    });
+    let img = document.createElement('img');
+    img.setAttribute('class', 'album-img');
+    img.setAttribute('data-fullsize', `${SERVER_NAME}${PHOTO_DIR}/${album}/.album/thumb_big.webp`);
+    img.src = `${SERVER_NAME}${PHOTO_DIR}/${album}/.album/thumb.webp`;
+    img.alt = `Album thumb for ${album}`;
+    a.appendChild(img);
+    let desc = document.createElement('div');
+    desc.setAttribute('class', 'album-desc');
+    desc.textContent = album;
+    a.appendChild(desc);
+    let div = document.createElement('div');
+    div.setAttribute('id', `div-${album}`);
+    div.setAttribute('class', 'album-thumb');
+    div.appendChild(a);
+    //link that tears down dom and inserts new images from request for that guy
+    albumList.appendChild(div);
+    pageLoad();/* global pageLoad *///little-big-img
+  });
+}
+/* get images from an album */
+function getImages(albumName) {
+  console.log(`getting images via ${PATHS.photoList}${albumName}`);
+  return fetch(`${BASE_URL}${PATHS.photoList}${albumName}`, { mode: 'cors' })
+    .then(res => {
+      if (typeof res === 'string') return false;
+      return res.json();
+    });
+}
+function refreshImages(imageNames, album) {
+  let albumContainer = document.querySelector(`.gal`);
+  removeChildren(albumContainer);
+  document.querySelector('#page-title').textContent = album;
+  imageNames.forEach(image => {
+    let img = document.createElement('img');
+    img.src = `${SERVER_NAME}${PHOTO_DIR}/${album}/.thumb/${image}`;
+    img.setAttribute('data-fullsize', `${SERVER_NAME}${PHOTO_DIR}/${album}/${image}`);
+    let a = document.createElement('a');
+    a.setAttribute('href', `javascript:void(0);`);
+    a.setAttribute('id', `i-${image}`);
+    a.setAttribute('data-album', `${album}`);
+    a.setAttribute('data-image', `${image}`);
+    a.appendChild(img);
+    let div = document.createElement('div');
+    a.addEventListener('click', ev => {
+      let lightBox = document.querySelector('light-box');
+      lightBox.large = `${SERVER_NAME}${PHOTO_DIR}/${album}/${image}`;
+      lightBox.setAttribute('open', '');
+      // let thumbnail = document.querySelector('img#web-img');
+      // let formattedImage = image.split('.')[0]+'.'+IMAGE_FORMAT;
+      // thumbnail.src = `${SERVER_NAME}${PHOTO_DIR}/${album}/.web/${formattedImage}`;
+      // console.log(`mousing over ${SERVER_NAME}${PHOTO_DIR}/${album}/.web/${formattedImage}`);
+      // thumbnail.parentElement.href = `${SERVER_NAME}${PHOTO_DIR}/${album}/.web/${formattedImage}`;
+    });
+    div.appendChild(a);
+    albumContainer.appendChild(div);
+  });
+  pageLoad();//little-big-img
+}
+function supportsWebP() {
+  let el = document.createElement('canvas');
+  if (el.getContext && el.getContext('2d')) {
+    return el.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+  }
+  return false;
+}
+getAlbums().then(refreshAlbums);
+document.querySelector('#home-tab').addEventListener('click', function (e) {
+  getAlbums().then(refreshAlbums);
+});
+</script>
+<script src="/js/little-big-img.js"></script>
+<link rel="stylesheet" type="text/css" href="/styles/little-big-img.css"/>
+</main>
+<footer>
+  <a href="https://github.com/zvakanaka/node-gal">Code on GitHub</a>
+  <noscript id="deferred-styles2">
+    <link rel="stylesheet" type="text/css" href="/styles/main.css"/>
+  </noscript>
+  <script>
+    //this is what google pageload recommends so I copied this:
+    var loadDeferredStyles2 = function() {
+      var addStylesNode2 = document.getElementById("deferred-styles2");
+      var replacement = document.createElement("div");
+      replacement.innerHTML = addStylesNode2.textContent;
+      document.body.appendChild(replacement)
+      addStylesNode2.parentElement.removeChild(addStylesNode2);
+    };
+    var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+        webkitRequestAnimationFrame || msRequestAnimationFrame;
+    if (raf) raf(function() { window.setTimeout(loadDeferredStyles2, 0); });
+    else window.addEventListener('load', loadDeferredStyles2);
+  </script>
+</footer>
+</body>
+</html>

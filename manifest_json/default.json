@@ -1,0 +1,23 @@
+{
+  "name": "Photo Gal",
+  "short_name": "Photos",
+  "icons": [
+    {
+      "src": "img/launcher_small.png",
+      "sizes": "36x36",
+      "type": "image/png",
+      "density": 0.75
+    },
+    {
+      "src": "img/launcher_large.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "density": 0.75
+    }
+  ],
+  "theme_color": "#4286f4",
+  "background_color": "#4286f4",
+  "display": "fullscreen",
+  "start_url": "/gal",
+  "orientation": "landscape"
+}
