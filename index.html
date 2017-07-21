@@ -19,6 +19,7 @@
 <div class="gal"></div>
 <light-box></light-box>
 <script>
+const DEMO_MODE = false || location.href.includes('github.io');
 const SERVER_NAME = 'http://localhost:8888'
 const BASE_URL = `${SERVER_NAME}`;
 const PHOTO_DIR = `/photo`;
@@ -56,7 +57,6 @@ function refreshAlbums(albumNames) {
   document.querySelector('#page-title').textContent = 'Albums';
   albumNames.forEach(album => {
     let a = document.createElement('a');
-    // a.setAttribute('href', `${BASE_URL}?action=album&album=${album}`);
     a.setAttribute('href', `javascript:void(0);`);
     a.setAttribute('id', `a-${album}`);
     a.setAttribute('data-album', `${album}`);
@@ -66,7 +66,7 @@ function refreshAlbums(albumNames) {
     let img = document.createElement('img');
     img.setAttribute('class', 'album-img');
     img.setAttribute('data-fullsize', `${SERVER_NAME}${PHOTO_DIR}/${album}/.album/thumb_big.webp`);
-    img.src = `${SERVER_NAME}${PHOTO_DIR}/${album}/.album/thumb.webp`;
+    img.src = DEMO_MODE ? `` : `${SERVER_NAME}${PHOTO_DIR}/${album}/.album/thumb.webp`;
     img.alt = `Album thumb for ${album}`;
     a.appendChild(img);
     let desc = document.createElement('div');
@@ -97,8 +97,8 @@ function refreshImages(imageNames, album) {
   document.querySelector('#page-title').textContent = album;
   imageNames.forEach(image => {
     let img = document.createElement('img');
-    img.src = `${SERVER_NAME}${PHOTO_DIR}/${album}/.thumb/${image}`;
-    img.setAttribute('data-fullsize', `${SERVER_NAME}${PHOTO_DIR}/${album}/${image}`);
+    img.src = DEMO_MODE ? `${image}` : `${SERVER_NAME}${PHOTO_DIR}/${album}/.thumb/${image}`;
+    img.setAttribute('data-fullsize', DEMO_MODE ? `${image}` : `${SERVER_NAME}${PHOTO_DIR}/${album}/${image}`);
     let a = document.createElement('a');
     a.setAttribute('href', `javascript:void(0);`);
     a.setAttribute('id', `i-${image}`);
@@ -108,7 +108,7 @@ function refreshImages(imageNames, album) {
     let div = document.createElement('div');
     a.addEventListener('click', ev => {
       let lightBox = document.querySelector('light-box');
-      lightBox.large = `${SERVER_NAME}${PHOTO_DIR}/${album}/${image}`;
+      lightBox.large = DEMO_MODE ? `${image}` : `${SERVER_NAME}${PHOTO_DIR}/${album}/${image}`;
       lightBox.setAttribute('open', '');
       // let thumbnail = document.querySelector('img#web-img');
       // let formattedImage = image.split('.')[0]+'.'+IMAGE_FORMAT;
