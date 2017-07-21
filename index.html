@@ -20,7 +20,7 @@
 <light-box></light-box>
 <script>
 const DEMO_MODE = false || location.href.includes('github.io');
-const SERVER_NAME = 'http://localhost:8888'
+const SERVER_NAME = location.href.includes('github.io') ? 'http://localhost:8888' : 'https://node-gal.herokuapp.com';
 const BASE_URL = `${SERVER_NAME}`;
 const PHOTO_DIR = `/photo`;
 const PHOTO_URL = `${SERVER_NAME}${PHOTO_DIR}`
