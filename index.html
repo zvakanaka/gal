@@ -22,21 +22,19 @@
 const DEMO_MODE = false || location.href.includes('github.io');
 const SERVER_NAME = !location.href.includes('github.io') ? 'http://localhost:8888' : 'https://node-gal.herokuapp.com';
 const BASE_URL = `${SERVER_NAME}`;
-const PHOTO_DIR = `/photo`;
+const PHOTO_DIR = ``;
 const PHOTO_URL = `${SERVER_NAME}${PHOTO_DIR}`
-const IMAGE_FORMAT = supportsWebP() ? 'webp' : 'jpg';
-// const PATHS = {
-//   albumList: '?action=album_names',
-//   photoList: '?action=pictures_in_album&album='
-// };
+// const IMAGE_FORMAT = supportsWebP() ? 'webp' : 'jpg';
 const PATHS = {
-  albumList: '/directories',
-  photoList: '/images/'
+  albumNames: '/albums/names',
+  albumDetails: '/albums/details',
+  albums: '/albums/all',
+  album: '/album/'
 };
 /* get album names */
 function getAlbums() {
-  console.log(`getting albums via ${PATHS.albumList}`);
-  return fetch(`${BASE_URL}${PATHS.albumList}`, { mode: 'cors' })
+  console.log(`getting all albums via ${PATHS.albumDetails}`);
+  return fetch(`${BASE_URL}${PATHS.albumDetails}`, { mode: 'cors' })
     .then(res => {
       if (typeof res === 'string') return false;
       return res.json();
@@ -51,30 +49,30 @@ function removeChildren(parent) {
   });
 }
 /* do it all again */
-function refreshAlbums(albumNames) {
+function refreshAlbums(albumNamesAndThumbs) {
   let albumList = document.querySelector('.gal');
   removeChildren(albumList);
   document.querySelector('#page-title').textContent = 'Albums';
-  albumNames.forEach(album => {
+  albumNamesAndThumbs.forEach(album => {
     let a = document.createElement('a');
     a.setAttribute('href', `javascript:void(0);`);
-    a.setAttribute('id', `a-${album}`);
-    a.setAttribute('data-album', `${album}`);
+    a.setAttribute('id', `a-${album.name}`);
+    a.setAttribute('data-album', `${album.name}`);
     a.addEventListener('click', e => {
-      getImages(`${album}`).then((data) => refreshImages(data, album));
+      getAlbumData(`${album.name}`).then((data) => refreshAlbumData(data, album.name));
     });
     let img = document.createElement('img');
     img.setAttribute('class', 'album-img');
-    img.setAttribute('data-fullsize', `${SERVER_NAME}${PHOTO_DIR}/${album}/.album/thumb_big.webp`);
-    img.src = DEMO_MODE ? `` : `${SERVER_NAME}${PHOTO_DIR}/${album}/.album/thumb.webp`;
-    img.alt = `Album thumb for ${album}`;
+    img.setAttribute('data-fullsize', `${album.thumbMedium}`);
+    img.src = DEMO_MODE ? `` : `${album.thumbSmall}`;
+    img.alt = `Album thumb for ${album.name}`;
     a.appendChild(img);
     let desc = document.createElement('div');
     desc.setAttribute('class', 'album-desc');
-    desc.textContent = album;
+    desc.textContent = album.name;
     a.appendChild(desc);
     let div = document.createElement('div');
-    div.setAttribute('id', `div-${album}`);
+    div.setAttribute('id', `div-${album.name}`);
     div.setAttribute('class', 'album-thumb');
     div.appendChild(a);
     //link that tears down dom and inserts new images from request for that guy
@@ -83,32 +81,33 @@ function refreshAlbums(albumNames) {
   });
 }
 /* get images from an album */
-function getImages(albumName) {
-  console.log(`getting images via ${PATHS.photoList}${albumName}`);
-  return fetch(`${BASE_URL}${PATHS.photoList}${albumName}`, { mode: 'cors' })
+function getAlbumData(albumName) {
+  console.log(`getting images via ${PATHS.album}${albumName}`);
+  return fetch(`${BASE_URL}${PATHS.album}${albumName}`, { mode: 'cors' })
     .then(res => {
       if (typeof res === 'string') return false;
       return res.json();
     });
 }
-function refreshImages(imageNames, album) {
+function refreshAlbumData(albumData, album) {
+  console.log('albumData', albumData);
   let albumContainer = document.querySelector(`.gal`);
   removeChildren(albumContainer);
   document.querySelector('#page-title').textContent = album;
-  imageNames.forEach(image => {
+  albumData.images.forEach((image, i) => {
     let img = document.createElement('img');
-    img.src = DEMO_MODE ? `${image}` : `${SERVER_NAME}${PHOTO_DIR}/${album}/.thumb/${image}`;
-    img.setAttribute('data-fullsize', DEMO_MODE ? `${image}` : `${SERVER_NAME}${PHOTO_DIR}/${album}/${image}`);
+    img.src = image.small;
+    img.setAttribute('data-fullsize', image.medium);
     let a = document.createElement('a');
     a.setAttribute('href', `javascript:void(0);`);
-    a.setAttribute('id', `i-${image}`);
+    a.setAttribute('id', `i-${album}-${i}`);
     a.setAttribute('data-album', `${album}`);
     a.setAttribute('data-image', `${image}`);
     a.appendChild(img);
     let div = document.createElement('div');
     a.addEventListener('click', ev => {
       let lightBox = document.querySelector('light-box');
-      lightBox.large = DEMO_MODE ? `${image}` : `${SERVER_NAME}${PHOTO_DIR}/${album}/${image}`;
+      lightBox.large = image.large;
       lightBox.setAttribute('open', '');
       // let thumbnail = document.querySelector('img#web-img');
       // let formattedImage = image.split('.')[0]+'.'+IMAGE_FORMAT;
