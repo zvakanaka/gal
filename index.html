@@ -19,7 +19,6 @@
 <div class="gal"></div>
 <light-box></light-box>
 <script>
-const DEMO_MODE = false || location.href.includes('github.io');
 const SERVER_NAME = !location.href.includes('github.io') ? 'http://localhost:8888' : 'https://node-gal.herokuapp.com';
 const BASE_URL = `${SERVER_NAME}`;
 const PHOTO_DIR = ``;
@@ -64,7 +63,7 @@ function refreshAlbums(albumNamesAndThumbs) {
     let img = document.createElement('img');
     img.setAttribute('class', 'album-img');
     img.setAttribute('data-fullsize', `${album.thumbMedium}`);
-    img.src = DEMO_MODE ? `` : `${album.thumbSmall}`;
+    img.src = `${album.thumbSmall}`;
     img.alt = `Album thumb for ${album.name}`;
     a.appendChild(img);
     let desc = document.createElement('div');
@@ -90,7 +89,6 @@ function getAlbumData(albumName) {
     });
 }
 function refreshAlbumData(albumData, album) {
-  console.log('albumData', albumData);
   let albumContainer = document.querySelector(`.gal`);
   removeChildren(albumContainer);
   document.querySelector('#page-title').textContent = album;
