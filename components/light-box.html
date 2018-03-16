@@ -3,11 +3,11 @@
   <div id="light-box__overlay" class="light-box__hidden container">
     <img id="light-box__image" class="web" src="" alt="Alt Text!">
     <div class="buttons">
-      <div class="button" id="light-box__close"><div class="button-content">x</div></div>
-      <div class="button"><div class="button-content">r</div></div>
-      <div class="button"><div class="button-content">v</div></div>
-      <div class="button"><div class="button-content"><</div></div>
-      <div class="button"><div class="button-content">></div></div>
+      <div class="button" id="light-box__close"><div class="button-content">✕</div></div>
+      <!-- <div class="button"><div class="button-content">r</div></div> -->
+      <!-- <div class="button"><div class="button-content">v</div></div> -->
+      <!-- <div class="button"><div class="button-content"><</div></div> -->
+      <!-- <div class="button"><div class="button-content">></div></div> -->
     </div>
   </div>
   <style media="screen">
@@ -15,9 +15,9 @@
   .container { top: 5px; left: 5px; z-index: 9999; height: 100%; width: 100%; display: grid; grid-template-columns: 90% 10%; position: absolute; }
   #light-box__image { max-width:95%; max-height:95%; }
   .web{ /*border-style: solid;*/ grid-column: 1; }
-  .buttons { grid-column: 2; overflow: hidden; background-color: #eee; }
-  .button { /*height: 15%;*/ height: 64px; border-style: solid; }
-  .button-content { position: relative; top: 50%; transform: translateY(-50%); transform: translateX(50%); }
+  .buttons { grid-column: 2; overflow: hidden; }
+  .button { height: 64px; width: 64px; display: flex; align-items: center; justify-content: center; border-radius: 100px; border-style: solid; cursor: pointer; background-color: #eee; }
+  .button-content { position: relative; transform: translateY(5%); font-size: 3em; }
   .light-box__hidden { display: none; }
   </style>
 </template>
