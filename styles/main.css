@@ -121,6 +121,8 @@ div.album-thumb:hover, img.thumb:hover {
 div.album-desc {
   padding: 6px;
   text-align: center;
+  background: black;
+  color: white;
 }
 
 .thumb-link {
