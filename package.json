@@ -1,0 +1,24 @@
+{
+  "name": "gal",
+  "version": "1.0.0",
+  "description": "[Demo](https://zvakanaka.github.io/gal)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server -d false --port 8080 --log-ip -c10 -i false --no-dotfiles"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zvakanaka/gal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zvakanaka/gal/issues"
+  },
+  "homepage": "https://github.com/zvakanaka/gal#readme",
+  "dependencies": {
+    "http-server": "^14.0.0"
+  }
+}
