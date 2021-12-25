@@ -15,13 +15,16 @@
   </div>
   <style media="screen">
   #light-box__background { top: 0%; left: 0%; width: 100%; height: 100%; z-index: 9998; position: fixed; background-color: black; -moz-opacity: 0.8; opacity:.80; filter: alpha(opacity=80);}
-  .container { top: 5px; left: 5px; z-index: 9999; height: 100%; width: 100%; display: grid; grid-template-columns: 90% 10%; position: fixed; grid-template-columns: minmax(0, 1fr) 90px; }
+  .container { top: 0px; left: 0px; z-index: 9999; height: 100%; width: 100%; display: grid; position: fixed; }
   #light-box__image { max-width:95%; max-height:95%; justify-self: center; align-self: center; }
   .web{ /*border-style: solid;*/ grid-column: 1; }
-  .buttons { grid-column: 2; overflow: hidden; }
-  .button { height: 64px; width: 64px; display: flex; align-items: center; justify-content: center; border-radius: 100px; border-style: solid; cursor: pointer; background-color: #eee; }
+  .buttons { position: fixed; overflow: hidden; top: 12px; right: 12px; }
+  .button { height: 64px; width: 64px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fffc; font-family: courier new, monospace; }
   .button-content { position: relative; transform: translateY(5%); font-size: 3em; }
   .light-box__hidden { display: none; }
+  @media (min-aspect-ratio: 1/1) { /* landscape */
+    
+  }
   </style>`;
   // let querySelector = function(selector) {
   //   //currentScript is this ^ script tag, and the owner is this document around it
