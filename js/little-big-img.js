@@ -26,7 +26,7 @@ function pageLoad() {
     let hasPath = evt.path || (evt.composedPath && evt.composedPath());
     if (hasPath) {
       if (!isChrome) {
-        path = evt.composedPath()[0];
+        path = evt.target;
       } else {
         path = evt.path[0];
       }
