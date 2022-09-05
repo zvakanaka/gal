@@ -20,7 +20,7 @@
   </head>
   <body>
   <nav>
-    <a class="nav-link nav-a on" href="javascript:void(0);" id="home-tab">Pictures</a>
+    <a class="nav-link nav-a on" href="./index.html" id="home-tab">Pictures</a>
   </nav>
 <main>
 <h1 id="page-title"></h1>
@@ -50,35 +50,35 @@ function getAlbums() {
 /* clean lists */
 function removeChildren(parent) {
   if (!parent || parent.children.length === 0) return false;
-  let previousAlbums = Array.from(parent.children);
+  const previousAlbums = Array.from(parent.children);
   previousAlbums.forEach(child => {
     parent.removeChild(child);
   });
 }
 /* do it all again */
 function refreshAlbums(albumNamesAndThumbs) {
-  let albumList = document.querySelector('.gal');
+  const albumList = document.querySelector('.gal');
   removeChildren(albumList);
   document.querySelector('#page-title').textContent = 'Albums';
   albumNamesAndThumbs.forEach(album => {
-    let a = document.createElement('a');
+    const a = document.createElement('a');
     a.setAttribute('href', `javascript:void(0);`);
     a.setAttribute('id', `a-${album.name}`);
     a.setAttribute('data-album', `${album.name}`);
     a.addEventListener('click', e => {
       getAlbumData(`${album.name}`).then((data) => refreshAlbumData(data, album.name));
     });
-    let img = document.createElement('img');
+    const img = document.createElement('img');
     img.setAttribute('class', 'album-img');
     img.dataset.fullsize = `${album.thumbMedium}`
     img.src = DEMO_MODE ? `` : `${album.thumbSmall}`;
     img.alt = `Album thumb for ${album.name}`;
     a.appendChild(img);
-    let desc = document.createElement('div');
+    const desc = document.createElement('div');
     desc.setAttribute('class', 'album-desc');
     desc.textContent = album.name;
     a.appendChild(desc);
-    let div = document.createElement('div');
+    const div = document.createElement('div');
     div.setAttribute('id', `div-${album.name}`);
     div.setAttribute('class', 'album-thumb');
     div.appendChild(a);
@@ -95,29 +95,30 @@ function getAlbumData(albumName) {
       return res.json();
     });
 }
-function refreshAlbumData(albumData, album) {
-  let albumContainer = document.querySelector(`.gal`);
+function refreshAlbumData(albumData, album, pushState = true) {
+  const albumContainer = document.querySelector(`.gal`);
+  document.title = album
   removeChildren(albumContainer);
   document.querySelector('#page-title').textContent = album;
   albumData.images.forEach((image, i) => {
-    let img = document.createElement('img');
+    const img = document.createElement('img');
     img.classList.add('thumbnail');
     img.src = image.small;
     img.dataset.fullsize = image.medium;
     img.dataset.lightboxImage = image.large;
-    let a = document.createElement('a');
+    const a = document.createElement('a');
     a.setAttribute('href', `javascript:void(0);`);
     a.setAttribute('id', `i-${album}-${i}`);
     // a.setAttribute('data-album', `${album}`);
     // a.setAttribute('data-image', `${image}`);
     a.appendChild(img);
-    let div = document.createElement('div');
+    const div = document.createElement('div');
     a.addEventListener('click', ev => {
-      let lightBox = document.querySelector('light-box');
+      const lightBox = document.querySelector('light-box');
       lightBox.large = image.large;
-      lightBox.setAttribute('open', '');
-      // let thumbnail = document.querySelector('img#web-img');
-      // let formattedImage = image.split('.')[0]+'.'+IMAGE_FORMAT;
+      lightBox.open = true
+      // const thumbnail = document.querySelector('img#web-img');
+      // const formattedImage = image.split('.')[0]+'.'+IMAGE_FORMAT;
       // thumbnail.src = `${SERVER_NAME}${PHOTO_DIR}/${album}/.web/${formattedImage}`;
       // console.log(`mousing over ${SERVER_NAME}${PHOTO_DIR}/${album}/.web/${formattedImage}`);
       // thumbnail.parentElement.href = `${SERVER_NAME}${PHOTO_DIR}/${album}/.web/${formattedImage}`;
@@ -126,7 +127,31 @@ function refreshAlbumData(albumData, album) {
     albumContainer.appendChild(div);
   });
   pageLoad(); // little-big-img
+  if (pushState && history.pushState) {
+    history.pushState(null, null, `#${album}`);
+  }
 }
+function getHash() {
+  if (window.location.hash) return window.location.hash.substring(1);
+  return null;
+}
+function handleNavChange() {
+  const albumName = getHash() ? decodeURIComponent(getHash()) : null
+  if (albumName) { // going forward to an album (empty albumName means going back to albums home
+    getAlbumData(albumName).then(albumData => {
+    refreshAlbumData(albumData, albumName, false)
+  })
+  } else {
+    document.title = 'Pictures'
+    getAlbums().then(refreshAlbums);
+    const lightboxEl = document.querySelector('light-box')
+    lightboxEl.open = false
+  }
+}
+
+window.onhashchange = () => { // handle browser back/forward
+  handleNavChange()
+};
 // left/right
 document.addEventListener('click', ({target, clientX, clientY}) => {
   const lightboxEl = document.querySelector('light-box');
@@ -170,16 +195,16 @@ document.addEventListener('mouseover', ({ target, clientX, clientY }) => {
 })
 
 // left/right arrow keys
-document.addEventListener('keydown', ({ target, code }) => {
+document.addEventListener('keydown', ({ target, key }) => {
   const lightboxEl = document.querySelector('light-box');
   if (!target.classList.contains('thumbnail') && lightboxEl.open && !target.classList.contains('button')) {
     const imageSources = Array.from(document.querySelectorAll('.thumbnail')).map(el => el.dataset.lightboxImage)
     const currentImageIndex = imageSources.findIndex(imageSource => imageSource === lightboxEl.large)
-    if (code === 'ArrowLeft') {
+    if (key === 'ArrowLeft') {
       const newIndex = currentImageIndex !== 0 ? currentImageIndex - 1 : imageSources.length - 1;
       const nextThumbnail = document.querySelectorAll('.thumbnail')[newIndex];
       nextThumbnail.click();
-    } else if (code === 'ArrowRight') {
+    } else if (key === 'ArrowRight') {
       const newIndex = currentImageIndex !== imageSources.length - 1 ? currentImageIndex + 1 : 0;
       const nextThumbnail = document.querySelectorAll('.thumbnail')[newIndex];
       nextThumbnail.click();
@@ -188,16 +213,20 @@ document.addEventListener('keydown', ({ target, code }) => {
 })
 
 function supportsWebP() {
-  let el = document.createElement('canvas');
+  const el = document.createElement('canvas');
   if (el.getContext && el.getContext('2d')) {
     return el.toDataURL('image/webp').indexOf('data:image/webp') === 0;
   }
   return false;
 }
-getAlbums().then(refreshAlbums);
-document.querySelector('#home-tab').addEventListener('click', function (e) {
+
+if (getHash() === null) {
   getAlbums().then(refreshAlbums);
-});
+} else {
+  // land on album
+  // TODO: handle album not found
+  handleNavChange()
+}
 </script>
 <script src="js/little-big-img.js"></script>
 <link rel="stylesheet" type="text/css" href="styles/little-big-img.css"/>
