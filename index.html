@@ -28,7 +28,7 @@
 <light-box></light-box>
 <script>
 const DEMO_MODE = false || location.href.includes('github.io');
-const SERVER_NAME = 'https://node-gal.herokuapp.com';
+const SERVER_NAME = 'http://localhost:8888';
 const BASE_URL = `${SERVER_NAME}`;
 const PHOTO_DIR = ``;
 const PHOTO_URL = `${SERVER_NAME}${PHOTO_DIR}`
@@ -117,6 +117,14 @@ function refreshAlbumData(albumData, album, pushState = true) {
       const lightBox = document.querySelector('light-box');
       lightBox.large = image.large;
       lightBox.open = true
+      console.log('clicked an image')
+      const url = (new URL(document.location))
+      const fileName = image.large.split('/')[image.large.split('/').length - 1] 
+      url.searchParams.set('open', fileName)
+//      const search = `?open=${}`  
+      const stateMethod = 'pushState'
+//      const stateMethod = 'replaceState'
+      window.history[stateMethod](null, null, `${url}`);
       // const thumbnail = document.querySelector('img#web-img');
       // const formattedImage = image.split('.')[0]+'.'+IMAGE_FORMAT;
       // thumbnail.src = `${SERVER_NAME}${PHOTO_DIR}/${album}/.web/${formattedImage}`;
@@ -130,6 +138,15 @@ function refreshAlbumData(albumData, album, pushState = true) {
   if (pushState && history.pushState) {
     history.pushState(null, null, `#${album}`);
   }
+
+  const params = (new URL(document.location)).searchParams
+  const open = params.get('open')
+  if (open) {
+    console.log(open)
+    const lightboxImage = document.querySelector(`[data-lightbox-image$="${open}"]`)
+    console.log('lightboxImage',lightboxImage)
+    if (lightboxImage) lightboxImage.click()
+  }
 }
 function getHash() {
   if (window.location.hash) return window.location.hash.substring(1);
@@ -137,6 +154,7 @@ function getHash() {
 }
 function handleNavChange() {
   const albumName = getHash() ? decodeURIComponent(getHash()) : null
+  console.log(`albumName: ${albumName}, getHash: ${getHash()}`)
   if (albumName) { // going forward to an album (empty albumName means going back to albums home
     getAlbumData(albumName).then(albumData => {
     refreshAlbumData(albumData, albumName, false)
