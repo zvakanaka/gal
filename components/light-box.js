@@ -39,15 +39,20 @@
       super(); // always always
     }
     static get observedAttributes() {
-      return ['open', 'small', 'large'];
+      return ['small', 'large'];
     }
     get small() { return this.querySelector('#light-box__image').getAttribute('src'); }
     set small(val) { this.querySelector('#light-box__image').setAttribute('src', val); }
     get large() { return this.querySelector('#light-box__image').getAttribute('src'); }
     set large(val) { this.querySelector('#light-box__image').setAttribute('src', val); }
     get open() { return this.hasAttribute('open'); }
-    set open(val) { this.openModal(); }
+    set open(val) { 
+      if (val === this.open) return
+      val !== false ? this.openModal() : this.closeModal()
+    }
+
     openModal() {
+      this.setAttribute('open', '') 
       this.querySelector('#light-box__overlay').classList.toggle('light-box__hidden');
       this.querySelector('#light-box__background').classList.toggle('light-box__hidden');
       document.body.style.overflow = 'hidden';
@@ -57,6 +62,8 @@
         this.removeAttribute('open'); 
         this.large = '';
         this.small = '';
+        this.querySelector('#light-box__overlay').classList.toggle('light-box__hidden');
+        this.querySelector('#light-box__background').classList.toggle('light-box__hidden');
         document.body.style.overflow = 'unset';
       }
     }
@@ -65,8 +72,8 @@
       this.appendChild(instance);
       //close modal
       this.querySelector('#light-box__close').addEventListener('click', this.closeModal.bind(this));
-      document.addEventListener('keydown', ({ code }) => {
-        if (code === 'Escape') {
+      document.addEventListener('keydown', ({ key }) => {
+        if (key === 'Escape') {
           this.closeModal();
         }
       })
